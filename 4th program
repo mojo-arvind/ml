@@ -1,1 +1,32 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn import metrics
 
+# Load dataset
+data = pd.read_csv('heart_failure_clinical_records.csv')
+
+# Separate features and target variable
+X = data.drop("DEATH_EVENT", axis=1)
+y = data["DEATH_EVENT"]
+
+# Split data into training and testing sets
+train_size = int(len(data) * 0.75)
+test_size = len(data) - train_size
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, train_size=train_size, random_state=42)
+
+# Initialize the model
+model = GaussianNB()
+
+# Train the model
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Calculate accuracy
+accuracy = metrics.accuracy_score(y_test, y_pred)
+
+# Print results
+print(f"Split {len(data)} rows into train {train_size} and test {test_size} rows")
+print(f"Accuracy of the classifier is: {accuracy * 100:.2f}%")
